@@ -3,6 +3,8 @@ const app = express()
 var cors = require('cors')
 const api = require('./src/api')
 
+const PORT = process.env.PORT || 5000
+
 app.use(cors())
 
 require('dotenv').config({path: "./.env"})
@@ -28,7 +30,7 @@ app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, '/public/404.html'))
 })
 
-app.listen('3000',()=>{console.log('server is running')})
+app.listen(PORT, ()=>{console.log('server is running')})
 
 //error handle
 app.use((err, req, res, next) => {
