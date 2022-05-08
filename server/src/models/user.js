@@ -35,6 +35,9 @@ const userSchema=new Schema({
     vouchers_list: {
         type: Array,
         required: true
+    },
+    role: {
+        type: String,
     }
 
     // resetPasswordToken: {

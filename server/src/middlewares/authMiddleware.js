@@ -4,7 +4,7 @@ const ErrorResponse = require("../../utils/errorResponse");
 
 const checkAdminPermission = (req, res, next) => {
 	const token = req.headers.authorization;
-
+    
     if (token) {
         jwt.verify(token, "secret", async (err, decodedToken) => {
             if (err) {
@@ -17,7 +17,7 @@ const checkAdminPermission = (req, res, next) => {
                             next();
                         }
                         else {
-                            return next(new ErrorResponse("UNAUTHORIZED", 401));
+                            return next(new ErrorResponse("Không phải quản trị viên", 401));
                         }
                     })
                     .catch((error) => {

@@ -29,6 +29,8 @@ async function addVoucher(reqVoucher){
 
 async function addVoucherCode(reqVoucherCode, reqVoucherId ){
     try {
+        console.log(reqVoucherCode)
+        console.log(reqVoucherId)
         let voucher = await Voucher.findById(reqVoucherId);
 
         if(!voucher) { 
@@ -45,7 +47,8 @@ async function addVoucherCode(reqVoucherCode, reqVoucherId ){
             newCodes.push(oldCodes[i]);
         }
         newCodes.push(reqVoucherCode);
-        voucher.vouchers_list = newCodes;
+        voucher.voucher_code = newCodes;
+        console.log(voucher)
         await voucher.save()
 
         return {
@@ -107,6 +110,7 @@ async function getVouchersBySearch(searchKey){
 
 async function getVouchersByCategory(category){
     try {
+        console.log(category)
         const vouchers = await Voucher.find({ category: category });
 
         return {
@@ -126,6 +130,7 @@ async function getVouchersByCategory(category){
 async function getVoucher(voucherId) {
     try {    
         const voucher = await Voucher.findById(voucherId)
+
         if(!voucher)
         {
             return {
@@ -138,7 +143,7 @@ async function getVoucher(voucherId) {
             error: false,
             message: "Lấy thành công voucher",
             voucher: {
-                descripion: voucher.descripion,
+                description: voucher.description,
                 category: voucher.category,
                 supplier_name: voucher.supplier_name,
                 point_cost: voucher.point_cost,
@@ -156,12 +161,11 @@ async function getVoucher(voucherId) {
 
 async function updateVoucher(voucherId, reqVoucherInfo) {
     try {
-        const descripion = reqVoucherInfo.descripion;
+        const description = reqVoucherInfo.description;
         const category = reqVoucherInfo.category;
         const supplier_name = reqVoucherInfo.supplier_name;
         const point_cost = reqVoucherInfo.point_cost;
         const image = reqVoucherInfo.image;
-        
 
         const voucher = await Voucher.findById(voucherId)
         if(!voucher)
@@ -175,7 +179,7 @@ async function updateVoucher(voucherId, reqVoucherInfo) {
         const updatedVoucher = await Voucher.findByIdAndUpdate(
             voucherId,
             {
-                descripion: descripion,
+                description: description,
                 category: category,
                 supplier_name: supplier_name,
                 point_cost: point_cost,

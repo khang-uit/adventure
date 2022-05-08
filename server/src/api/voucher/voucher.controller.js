@@ -46,7 +46,7 @@ async function getVouchersBySearch (req, res, next) {
 
 async function getVouchersByCategory (req, res, next) {
     try {
-        let DTO=await voucherService.getVouchersByCategory(req.query.page, req.query.category);
+        let DTO=await voucherService.getVouchersByCategory(req.params.category);
         if(DTO.error) 
         {
             return next(new ErrorResponse(DTO.message, 500));

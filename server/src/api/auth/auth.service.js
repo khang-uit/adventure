@@ -66,11 +66,21 @@ async function login(body) {
             const passcmp = await bcrypt.compare(password, user.password);
             if (passcmp) {
                 var _token = jwt.sign({ _id: user._id }, "secret");
-                return {
-                    error: false,
-                    message: "Đăng nhập thành công",
-                    token: _token,
-                };
+                if(user.role){
+                    return {
+                        error: false,
+                        message: "Đăng nhập thành công",
+                        token: _token,
+                        role: user.role,
+                    };
+                }else{
+                    return {
+                        error: false,
+                        message: "Đăng nhập thành công",
+                        token: _token,
+                    };
+                }
+                
             } else {
                 return {
                     error: true,

@@ -53,10 +53,16 @@ async function postVoucher(userId, voucher_id){
             }
         }
 
+        if(voucher.voucher_code.length <= 0){
+            return {
+                error: true,
+                message: 'Voucher đã hết số lượng'
+            }
+        }
+
         let oldVoucherCodes = voucher.voucher_code;
-        
-        let voucherCode = oldVoucherCodes.pop();
-        
+        let voucherCode = oldVoucherCodes[0];
+        oldVoucherCodes.shift();
 
             let oldVouchers = user.vouchers_list;
             let newVouchers =[];
@@ -72,7 +78,7 @@ async function postVoucher(userId, voucher_id){
                 point_cost: voucher.point_cost,
                 image: voucher.image,
             });
-            voucher.voucher_code = voucherCode;
+            voucher.voucher_code = oldVoucherCodes;
             user.vouchers_list = newVouchers;
 
             user.point -= voucher.point_cost;
@@ -145,6 +151,8 @@ async function postDonation(userId, reqDonation){
         //     }
 
         //     await user.save()
+        
+
         const type_of_donation = reqDonation.type_of_donation;
         const money = reqDonation.money;
         const clothes_amount = reqDonation.clothes_amount;
@@ -214,6 +222,22 @@ async function getUser(userId) {
             return {
                 error: true,
                 message: "Khong tim thay user"
+            }
+        }
+
+        if(user.role == "admin"){
+            return {
+                error: false,
+                message: "Tim thay user",
+                _id: user._id,
+                email: user.email,
+                fullname: user.fullname,
+                phonenumber: user.phonenumber,
+                cmnd: user.cmnd,
+                wallet_balance: user.wallet_balance,
+                point: user.point,
+                vouchers_list: user.vouchers_list,
+                role: user.role
             }
         }
         
