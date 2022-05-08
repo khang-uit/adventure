@@ -20,6 +20,7 @@ app.use(express.static('public'))
 
 //routing
 app.use('/api/', api)
+
 app.use('/', (req, res) => {
   res.send('App is running')
 })

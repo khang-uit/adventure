@@ -15,7 +15,7 @@ async function getDonations(page){
         for(let i = 0; i < donationsQuery.length; i++)                    
         {
             const user_id = donationsQuery[i]._id;
-            const user = await User.findOne({ user_id });
+            const user = await User.findById(user_id);
             donations.push({
                 ...donationsQuery[i]._doc,
                 user: {
@@ -69,7 +69,7 @@ async function getTopDonations(){
         for(let i = 0; i < topDonationsQueryByYear.length; i++)                    
         {
             const user_id = topDonationsQueryByYear[i]._id;
-            const user = await User.findOne({ user_id });
+            const user = await User.findById(user_id);
             topDonationsYear.push({
                 user: {
                     _id: user._id,
@@ -101,7 +101,7 @@ async function getTopDonations(){
         for(let i = 0; i < topDonationsQueryByMonth.length; i++)                    
         {
             const user_id = topDonationsQueryByMonth[i]._id;
-            const user = await User.findOne({ user_id });
+            const user = await User.findById(user_id);
             topDonationsMonth.push({
                 user: {
                     user_id: user._id,

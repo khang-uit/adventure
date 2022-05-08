@@ -4,7 +4,7 @@ var Voucher = require("../../models/voucher");
 
 async function getVoucher(userId){
     try {
-        let user = await User.findOne({ userId });
+        let user = await User.findById(userId);
         if(!user){    
             return {
                 error: true,
@@ -30,8 +30,8 @@ async function getVoucher(userId){
 
 async function postVoucher(userId, voucher_id){
     try {
-        let user = await User.findOne({ userId });
-        let voucher = await Voucher.findOne({ voucher_id })
+        let user = await User.findById(userId);
+        let voucher = await Voucher.findOne({ _id: voucher_id })
         if(!user) { 
             return {
                 error: true,
@@ -95,7 +95,7 @@ async function postVoucher(userId, voucher_id){
 
 async function getDonation(userId){
     try {
-        let user = await User.findOne({ userId });
+        let user = await User.findById(userId);
 
         let donationList = await Donation.find({user_id: userId});
         if(!user){    
@@ -121,7 +121,7 @@ async function getDonation(userId){
 
 async function postDonation(userId, reqDonation){
     try {
-        let user = await User.findOne({ userId });
+        let user = await User.findOne({ _id: userId });
         // if(!user) {  //nếu chưa có userId thì lưu vào
         //     return {
         //         error: true,
@@ -153,6 +153,14 @@ async function postDonation(userId, reqDonation){
 
         let point = 0;
 
+        
+        if(type_of_donation !== "1" && type_of_donation !== "2"){
+            return {
+                error: false,
+                message: "Lỗi loại quyên góp"
+            }
+        }
+
         if(type_of_donation === "1"){
             if(user.wallet_balance < money){
                 return {
@@ -183,7 +191,7 @@ async function postDonation(userId, reqDonation){
         });
 
         await newDonation.save()
-            
+        await user.save()
         return {
             error: false,
             message: "Quyên góp thành công"

@@ -29,7 +29,7 @@ async function addVoucher(reqVoucher){
 
 async function addVoucherCode(reqVoucherCode, reqVoucherId ){
     try {
-        let voucher = await Voucher.findOne({ reqVoucherId });
+        let voucher = await Voucher.findById(reqVoucherId);
 
         if(!voucher) { 
             return {
