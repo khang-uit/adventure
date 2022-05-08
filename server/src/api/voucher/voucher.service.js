@@ -123,10 +123,112 @@ async function getVouchersByCategory(category){
     }
 }
 
+async function getVoucher(voucherId) {
+    try {    
+        const voucher = await Voucher.findById(voucherId)
+        if(!voucher)
+        {
+            return {
+                error: true,
+                message: "Không tìm thấy voucher"
+            }
+        }
+        
+        return {
+            error: false,
+            message: "Lấy thành công voucher",
+            voucher: {
+                descripion: voucher.descripion,
+                category: voucher.category,
+                supplier_name: voucher.supplier_name,
+                point_cost: voucher.point_cost,
+                image: voucher.image,
+            }
+        }
+    }
+    catch(err) {
+        return {
+            err: true,
+            message: err.message
+        }
+    }
+}
+
+async function updateVoucher(voucherId, reqVoucherInfo) {
+    try {
+        const descripion = reqVoucherInfo.descripion;
+        const category = reqVoucherInfo.category;
+        const supplier_name = reqVoucherInfo.supplier_name;
+        const point_cost = reqVoucherInfo.point_cost;
+        const image = reqVoucherInfo.image;
+        
+
+        const voucher = await Voucher.findById(voucherId)
+        if(!voucher)
+        {
+            return {
+                error: true,
+                message: "Không tìm thấy voucher"
+            }
+        }
+
+        const updatedVoucher = await Voucher.findByIdAndUpdate(
+            voucherId,
+            {
+                descripion: descripion,
+                category: category,
+                supplier_name: supplier_name,
+                point_cost: point_cost,
+                image: image,
+            },
+        )
+        
+        return {
+            error: false,
+            message: "Update thành công voucher",
+        }
+    }
+    catch(err) {
+        return {
+            err: true,
+            message: err.message
+        }
+    }
+}
+
+async function deleteVoucher(voucherId) {
+    try {    
+        const voucher = await Voucher.findById(voucherId)
+        if(!voucher)
+        {
+            return {
+                error: true,
+                message: "Không tìm thấy voucher"
+            }
+        }
+
+        const deletedVoucher = await Voucher.findByIdAndDelete(voucherId)
+        
+        return {
+            error: false,
+            message: "Xóa thành công voucher",
+        }
+    }
+    catch(err) {
+        return {
+            err: true,
+            message: err.message
+        }
+    }
+}
+
 module.exports = {
     addVoucher,
     addVoucherCode,
     getVouchers,
     getVouchersBySearch,
-    getVouchersByCategory
+    getVouchersByCategory,
+    getVoucher,
+    updateVoucher,
+    deleteVoucher
 }

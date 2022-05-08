@@ -4,7 +4,7 @@ const ErrorResponse = require("../../../utils/errorResponse");
 //[GET] api/user/donation
 async function addSupplier (req, res, next) {
     try {
-        let DTO=await supplierService.addSupplier(req.body.supplier);
+        let DTO=await supplierService.addSupplier(req.body);
         if(DTO.error) 
         {
             return next(new ErrorResponse(DTO.message, 500));

@@ -76,10 +76,27 @@ async function getUser (req, res, next) {
     }
 }
 
+async function updateUser (req, res, next) {
+    try {
+        let DTO=await userService.updateUser(req.userId, req.body);
+        if(DTO.error) 
+        {
+            return next(new ErrorResponse(DTO.message, 500));
+        }
+        res.status(200).json(DTO);
+    }
+    catch(err) {
+        next(new ErrorResponse(err.message, 500));
+    }
+}
+
+updateUser
+
 module.exports = {
     getVoucher,
     postVoucher,
     getDonation,
     postDonation,
-    getUser
+    getUser,
+    updateUser
 }

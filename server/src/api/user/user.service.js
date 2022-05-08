@@ -156,7 +156,7 @@ async function postDonation(userId, reqDonation){
         
         if(type_of_donation !== "1" && type_of_donation !== "2"){
             return {
-                error: false,
+                error: true,
                 message: "Lỗi loại quyên góp"
             }
         }
@@ -164,7 +164,7 @@ async function postDonation(userId, reqDonation){
         if(type_of_donation === "1"){
             if(user.wallet_balance < money){
                 return {
-                    error: false,
+                    error: true,
                     message: "Không đủ tiền để thực hiện giao dịch"
                 }
             }
@@ -238,10 +238,50 @@ async function getUser(userId) {
     }
 }
 
+async function updateUser(userId, reqUserInfo) {
+    try {
+        const email = reqUserInfo.email;
+        const fullname = reqUserInfo.fullname;
+        const phonenumber = reqUserInfo.phonenumber;
+        const cmnd = reqUserInfo.cmnd;
+
+        const user = await User.findById(userId)
+        if(!user)
+        {
+            return {
+                error: true,
+                message: "Khong tim thay user"
+            }
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId, 
+            {
+                email: email,
+                fullname: fullname,
+                phonenumber: phonenumber,
+                cmnd: cmnd
+            }, 
+        )
+        
+        return {
+            error: false,
+            message: "Update thành công user",
+        }
+    }
+    catch(err) {
+        return {
+            err: true,
+            message: err.message
+        }
+    }
+}
+
 module.exports= {
     getVoucher,
     postVoucher,
     getDonation,
     postDonation,
     getUser,
+    updateUser
 }
