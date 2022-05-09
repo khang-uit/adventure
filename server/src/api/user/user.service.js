@@ -3,6 +3,7 @@ var Donation = require("../../models/donation");
 var Voucher = require("../../models/voucher");
 const pdf = require('html-pdf');
 const pdfTemplate = require('./documents/index.js');
+const Certificate = require("../../models/certificate");
 
 async function getVoucher(userId){
     try {
@@ -228,23 +229,52 @@ async function postDonation(userId, reqDonation){
             card_id
         });
 
-        
+        let width = 1100, height = 800;
 
         const getCerti = () => {
             return new Promise((resolve, reject) => {
-                pdf.create(pdfTemplate(user.fullname, money), {}).toBuffer(function(err, buffer){
+                pdf.create(pdfTemplate(user.fullname, money), {
+                        width: `${width}px`,
+                        height: `${height}px`,
+                        border: '0px',
+                        viewportSize: {
+                            width,
+                            height
+                        },
+                }).toBuffer(function(err, buffer){
                     const bufferToBase64 = Buffer.from(buffer).toString('base64')
                     resolve(bufferToBase64);
                 })
             })
         }
+
         const certificate = await getCerti();
 
+        const newCertificate = new Certificate({
+            image: certificate
+        });
+
+        
+
+        const getCertificateId = () => {
+            return new Promise((resolve, reject) => {
+                newCertificate.save(function(err, certificate){
+                    const id = certificate._id
+                    resolve(id);
+                });
+            })
+        }
+
+        const certificateId = await getCertificateId();
+
+        newDonation.save();
+        user.save();
           
         return {
             error: false,
             message: "Quyên góp thành công",
-            certificate: certificate
+            certificate: certificate,
+            certificateId: certificateId
         }
     }   
 
@@ -343,6 +373,36 @@ async function updateUser(userId, reqUserInfo) {
     }
 }
 
+
+async function getCertificate(cerId) {
+    try {
+
+        const certificate = await Certificate.findById(cerId)
+        if(!cerId)
+        {
+            return {
+                error: true,
+                message: "Khong tim thay chung chi"
+            }
+        }
+        
+        return {
+            error: false,
+            message: "Lay chung chi thành công",
+            certificate: certificate
+        }
+    }
+
+    catch(err) {
+        return {
+            err: true,
+            message: err.message
+        }
+    }
+}
+
+
+
 module.exports= {
     getVoucher,
     postVoucher,
@@ -350,5 +410,6 @@ module.exports= {
     postDonation,
     getUser,
     updateUser,
-    postMoney
+    postMoney,
+    getCertificate
 }
