@@ -1,6 +1,8 @@
 var User = require("../../models/user");
 var Donation = require("../../models/donation");
 var Voucher = require("../../models/voucher");
+const pdf = require('html-pdf');
+const pdfTemplate = require('./documents/index.js');
 
 async function getVoucher(userId){
     try {
@@ -88,6 +90,32 @@ async function postVoucher(userId, voucher_id){
         return {
             error: false,
             message: "Thêm voucher thành công"
+        }
+    }   
+
+    catch(err) {
+        return {
+            error: true,
+            message: err.message,
+        }
+    }
+}
+
+async function postMoney(userId, money){
+    try {
+        let user = await User.findById(userId);
+        if(!user) { 
+            return {
+                error: true,
+                message: 'Không tìm thấy người dùng'
+            }
+        }
+            user.wallet_balance += money;
+            await user.save()
+
+        return {
+            error: false,
+            message: "Nạp tiền thành công"
         }
     }   
 
@@ -188,6 +216,8 @@ async function postDonation(userId, reqDonation){
             }
         }
 
+        
+
         const newDonation = new Donation({
             user_id: userId,
             type_of_donation,
@@ -198,11 +228,23 @@ async function postDonation(userId, reqDonation){
             card_id
         });
 
-        await newDonation.save()
-        await user.save()
+        
+
+        const getCerti = () => {
+            return new Promise((resolve, reject) => {
+                pdf.create(pdfTemplate(user.fullname, money), {}).toBuffer(function(err, buffer){
+                    const bufferToBase64 = Buffer.from(buffer).toString('base64')
+                    resolve(bufferToBase64);
+                })
+            })
+        }
+        const certificate = await getCerti();
+
+          
         return {
             error: false,
-            message: "Quyên góp thành công"
+            message: "Quyên góp thành công",
+            certificate: certificate
         }
     }   
 
@@ -307,5 +349,6 @@ module.exports= {
     getDonation,
     postDonation,
     getUser,
-    updateUser
+    updateUser,
+    postMoney
 }

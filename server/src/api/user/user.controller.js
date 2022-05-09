@@ -61,6 +61,21 @@ async function postVoucher (req, res, next) {
     }
 }
 
+//[POST] api/user/donation
+async function postMoney (req, res, next) {
+    try {
+        let DTO=await userService.postMoney(req.userId, req.body.money);
+        if(DTO.error) 
+        {
+            return next(new ErrorResponse(DTO.message, 500));
+        }
+        res.status(200).json(DTO);
+    }
+    catch(err) {
+        next(new ErrorResponse(err.message, 500));
+    }
+}
+
 //[GET] api/user/
 async function getUser (req, res, next) {
     try {
@@ -98,5 +113,6 @@ module.exports = {
     getDonation,
     postDonation,
     getUser,
-    updateUser
+    updateUser,
+    postMoney
 }
