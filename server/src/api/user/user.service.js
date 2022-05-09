@@ -272,7 +272,7 @@ async function postDonation(userId, reqDonation){
           
         return {
             error: false,
-            message: "Quyên góp thành công",
+            message: "Quyên góp thành công, chia sẻ để nhận thêm điểm",
             certificate: certificate,
             certificateId: certificateId
         }
