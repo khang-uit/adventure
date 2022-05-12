@@ -25,7 +25,7 @@ const userSchema=new Schema({
     wallet_balance:{
         type: Number,
         required: true,
-        default: 0,
+        default: 1000000,
     },
     point:{
         type: Number,

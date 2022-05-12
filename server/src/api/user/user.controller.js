@@ -119,7 +119,33 @@ async function getCertificate (req, res, next) {
     }
 }
 
+async function vnpayPayment(req, res, next) {
+    try {
+        let DTO=await userService.vnpayPayment(req);
+        if(DTO.error) 
+        {
+            return next(new ErrorResponse(DTO.message, 500));
+        }
+        res.status(200).json(DTO);
+    }
+    catch(err) {
+        next(new ErrorResponse(err.message, 500));
+    }
+}
 
+async function vnpayIpn(req, res, next) {
+    try {
+        let DTO=await userService.vnpayIpn(req.userId, req);
+        if(DTO.error) 
+        {
+            return next(new ErrorResponse(DTO.message, 500));
+        }
+        res.status(200).json(DTO);
+    }
+    catch(err) {
+        next(new ErrorResponse(err.message, 500));
+    }
+}
 
 
 module.exports = {
@@ -130,5 +156,7 @@ module.exports = {
     getUser,
     updateUser,
     postMoney,
-    getCertificate
+    getCertificate,
+    vnpayPayment,
+    vnpayIpn
 }

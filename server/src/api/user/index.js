@@ -8,9 +8,12 @@ router.post('/donation', verifyToken, userController.postDonation)
 router.get('/donation', verifyToken, userController.getDonation)
 router.post('/voucher', verifyToken, userController.postVoucher)
 router.get('/voucher', verifyToken, userController.getVoucher)
-router.get('/', verifyToken, userController.getUser)
 router.post('/edit', verifyToken, userController.updateUser)
 router.post('/money', verifyToken, userController.postMoney);
 router.get('/certificate/:id', userController.getCertificate);
+router.post('/vnpay_payment', verifyToken, userController.vnpayPayment);
+router.post('/vnpay_ipn', verifyToken, userController.vnpayIpn);
+router.get('/', verifyToken, userController.getUser)
+
 
 module.exports = router;
