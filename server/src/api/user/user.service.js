@@ -227,8 +227,6 @@ async function postDonation(userId, reqDonation){
             }
         }
 
-        
-
         const newDonation = new Donation({
             user_id: userId,
             type_of_donation,
